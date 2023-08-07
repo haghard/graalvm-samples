@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+  <Appenders>
+
+    <RollingFile name="LogToRollingFile" fileName="logs/app.log"
+                 filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <pattern>%date{HH:mm:ss} %-5level [%X{akkaSource}] - %msg%n</pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+    </RollingFile>
+
+    <Console name="stdout">
+      <PatternLayout>
+        <pattern>%date{HH:mm:ss} [%-5level] - %msg%n</pattern>
+        <!--<pattern>%yellow(%X{akkaTimestamp}) |%highlight(%-5level)| [%green(%X{sourceThread}, %X{sourceActorSystem}, %X{akkaSource})] %cyan(%logger{36}) - %highlight(%msg%n%ex{full})</pattern>-->
+      </PatternLayout>
+    </Console>
+
+  </Appenders>
+
+  <Loggers>
+
+    <Logger name="com.github.vmencik.akkanative" level="${sys:loglevel.akkluster:-info}" additivity="false">
+      <AppenderRef ref="stdout"/>
+      <AppenderRef ref="LogToRollingFile"/>
+    </Logger>
+
+    <Root level="${sys:loglevel.root:-info}">
+      <AppenderRef ref="stdout"/>
+      <AppenderRef ref="LogToRollingFile"/>
+    </Root>
+
+  </Loggers>
+</Configuration>
